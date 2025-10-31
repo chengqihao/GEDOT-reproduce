@@ -654,6 +654,7 @@ class Trainer(object):
             filename = f'./tab5/{self.args.dataset}.csv'
         elif testing_graph_set == 'test_large':
             filename = f'./fig8/{self.args.dataset}.csv'
+        os.makedirs(os.path.dirname(filename),exist_ok=True)
         # 如果文件不存在 -> 写入表头；否则 -> 只追加数据
         if not os.path.exists(filename):
             df.to_csv(filename, index=False)
@@ -799,18 +800,24 @@ class Trainer(object):
         precision = round(np.mean(precision), 3)
         f1 = round(np.mean(f1), 3)
         sim = round(np.mean(sim), 3)
-        df = pd.DataFrame(self.results[1:], columns=self.results[0])
-        filename = f'./tab4/{self.args.dataset}.csv'
-        # 如果文件不存在 -> 写入表头；否则 -> 只追加数据
-        if not os.path.exists(filename):
-            df.to_csv(filename, index=False)
-        else:
-            df.to_csv(filename, mode='a', header=False, index=False)
         self.results.append(
             ('model_name', 'dataset', 'graph_set', '#testing_pairs', 'time_usage(s/100p)', 'mae','acc',
              'fea', 'rho', 'tau', 'pk10', 'pk20','precision', 'recall', 'f1'))
         self.results.append(
             (self.args.model_name, self.args.dataset, testing_graph_set, num, time_usage, mae_path, acc,fea,rho,tau,pk10,pk20,precision, recall, f1))
+        df = pd.DataFrame(self.results[1:], columns=self.results[0])
+        filename = f'./tab4/{self.args.dataset}.csv'
+        os.makedirs(os.path.dirname(filename),exist_ok=True)
+        # 如果文件不存在 -> 写入表头；否则 -> 只追加数据
+        if not os.path.exists(filename):
+            df.to_csv(filename, index=False)
+        else:
+            df.to_csv(filename, mode='a', header=False, index=False)
+        # self.results.append(
+        #     ('model_name', 'dataset', 'graph_set', '#testing_pairs', 'time_usage(s/100p)', 'mae','acc',
+        #      'fea', 'rho', 'tau', 'pk10', 'pk20','precision', 'recall', 'f1'))
+        # self.results.append(
+        #     (self.args.model_name, self.args.dataset, testing_graph_set, num, time_usage, mae_path, acc,fea,rho,tau,pk10,pk20,precision, recall, f1))
 
         print(*self.results[-2], sep='\t')
         print(*self.results[-1], sep='\t')
