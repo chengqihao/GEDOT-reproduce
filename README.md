@@ -23,15 +23,15 @@ tqdm                      4.65.0
 ```
 ### Environment Setup
 
-A shell script `setup_gedot_env.sh` is provided to create the `gedot_repro` environment and install all dependencies using Conda.
+Please create the conda environment `gedot_repro` with python 3.9, and activate the environment:
+```bash
+conda create -n gedot_repro python=3.9 -y
+conda activate gedot_repro
+```
 
+Then run the sheel script `setup_gedot_env.sh` to install all dependencies.
 ```bash
 sh setup_gedot_env.sh
-```
-Activate the environment:
-
-```bash
-conda activate gedot_repro
 ```
 
 ### Datasets

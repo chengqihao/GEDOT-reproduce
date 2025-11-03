@@ -1,7 +1,3 @@
-# Create and activate the virtual environment
-conda create -n gedot_repro python=3.9 -y
-source activate gedot_repro
-
 # Install PyTorch (CPU version)
 conda install pytorch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 cpuonly -c pytorch -y
 

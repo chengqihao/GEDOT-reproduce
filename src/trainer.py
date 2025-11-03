@@ -56,7 +56,7 @@ class Trainer(object):
             self.args.histogram = True
             self.args.target_mode = 'exp'
             self.model = SimGNN(self.args, self.number_of_labels).to(self.device)
-        elif self.args.model_name == "GedGNN":
+        elif "GedGNN" in self.args.model_name:
             if self.args.dataset in ["AIDS", "Linux"]:
                 self.args.loss_weight = 10.0
             else:
@@ -67,7 +67,7 @@ class Trainer(object):
         elif self.args.model_name == "TaGSim":
             self.args.target_mode = 'exp'
             self.model = TaGSim(self.args, self.number_of_labels).to(self.device)
-        elif self.args.model_name == "GEDHOT" or self.args.model_name == "GEDIOT":
+        elif "GEDHOT" in self.args.model_name or "GEDIOT" in self.args.model_name:
             self.args.loss_weight = 8.0
             self.args.gtmap = True
             self.model = GEDIOT(self.args, self.number_of_labels).to(self.device)
@@ -92,7 +92,7 @@ class Trainer(object):
                 prediction, _ = self.model(data)
                 losses = losses + torch.nn.functional.mse_loss(target, prediction)
                 # self.values.append((target - prediction).item())
-        elif self.args.model_name == "GedGNN":
+        elif "GedGNN" in self.args.model_name:
             weight = self.args.loss_weight
             for graph_pair in batch:
                 data = self.pack_graph_pair(graph_pair)
@@ -110,7 +110,7 @@ class Trainer(object):
                 ta_ged = data["ta_ged"]
                 prediction, _ = self.model(data)
                 losses = losses + torch.nn.functional.mse_loss(ta_ged, prediction)
-        elif self.args.model_name == "GEDIOT" or self.args.model_name == "GEDHOT":
+        elif "GEDIOT" in self.args.model_name or "GEDHOT" in self.args.model_name:
             weight = self.args.loss_weight
             for graph_pair in batch:
                 data = self.pack_graph_pair(graph_pair)
@@ -571,7 +571,7 @@ class Trainer(object):
             assert False
         if self.args.model_name not in ["GEDGW","Classic"]:
             self.model.eval()
-
+        self.results= []
         num = 0  # total testing number
         time_usage = []
         mse = []  # score mse
@@ -646,7 +646,6 @@ class Trainer(object):
              'fea', 'rho', 'tau', 'pk10', 'pk20'))
         self.results.append((self.args.model_name, self.args.dataset, testing_graph_set, num, time_usage, mse, mae, acc,
                              fea, rho, tau, pk10, pk20))
-        
         df = pd.DataFrame(self.results[1:], columns=self.results[0])
         if testing_graph_set == 'test':
             filename = f'./tab3/{self.args.dataset}.csv'
@@ -693,7 +692,7 @@ class Trainer(object):
         time_usage = []
 
         mae_path = []  # gep mae
-
+        self.results= []
         num_acc = 0  # the number of exact prediction (pre_ged == gt_ged)
         num_fea = 0  # the number of feasible prediction (pre_ged >= gt_ged)
         rho = []
@@ -858,7 +857,7 @@ class Trainer(object):
         tau = []
         pk10 = []
         pk20 = []
-
+        self.results = []
         for pair_type, i, j_list in tqdm(testing_graphs, file=sys.stdout):
             pre = []
             gt = []
@@ -948,7 +947,7 @@ class Trainer(object):
             testing_graphs = self.val_graphs
         else:
             assert False
-
+        self.results = []
         num = 0  # total testing number
         time_usage = []
         mse = []  # score mse
@@ -1217,10 +1216,10 @@ class Trainer(object):
             soft_matrix = hungarian(data) + 1.0
         else:
             _, pre_ged, soft_matrix = self.model(data)
-            if self.args.model_name=="GedGNN":
+            if "GedGNN" in self.args.model_name:
                 m = torch.nn.Softmax(dim=1)
                 soft_matrix = (m(soft_matrix) * 1e9 + 1).round()
-            else:
+            elif "GEDHOT" in self.args.model_name or "GEDIOT" in self.args.model_name:
                 soft_matrix = (soft_matrix * 1e9 + 1).round()
 
         solver = KBestMSolver(soft_matrix, g1, g2)
@@ -1436,11 +1435,13 @@ class Trainer(object):
             self.prediction_analysis(values3, "1000")
 
     def save(self, epoch):
+        dir_name = self.args.abs_path + self.args.model_path+self.args.model_name
+        os.makedirs(dir_name, exist_ok=True)
         torch.save(self.model.state_dict(),
                    self.args.abs_path + self.args.model_path+self.args.model_name+'/' + self.args.dataset + '_' + str(epoch))
 
     def load(self, epoch):
-        model_dicts={"GEDHOT":"GEDIOT","NOAH":"GPN","SimGNN":"SimGNN","GEDIOT":"GEDIOT","GedGNN":"GedGNN","TaGSim":"TaGSim"}
+        model_dicts={"GEDHOT":"GEDIOT","NOAH":"GPN","SimGNN":"SimGNN","GEDIOT":"GEDIOT","GedGNN":"GedGNN","TaGSim":"TaGSim","GEDIOT-small":"GEDIOT-small","GEDHOT-small":"GEDIOT-small","GedGNN-small":"GedGNN-small"}
         self.model.load_state_dict(
             torch.load(self.args.abs_path + self.args.model_path +model_dicts[self.args.model_name]+'/'+ self.args.dataset + '_' + str(epoch)))
 
