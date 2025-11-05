@@ -96,7 +96,7 @@ To reproduce results in **Figure 8** (methods with the `-small` suffix), run:
 sh fig.sh
 ```
 #### Running Demo
-We also provide two demo scripts to quickly verify the correctness of our code. Please run the following commands:
+We also provide two demo scripts to quickly verify the **correctness** of our code. Please run the following commands:
 ```bash
 sh table_demo.sh
 sh fig_demo.sh
