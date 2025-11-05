@@ -101,3 +101,4 @@ We also provide two demo scripts to quickly verify the **correctness** of our co
 sh table_demo.sh
 sh fig_demo.sh
 ```
+In this case, only a small number of graph pairs are used during training and testing, and the number of graph matchings performed for graph edit generation is limited to 4.
