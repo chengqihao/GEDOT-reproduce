@@ -121,7 +121,7 @@ def parameter_parser():
 
     parser.add_argument("--postk",
                         type=int,
-                        default=1,
+                        default=100,
                         help="Find k-best matching in the post-processing algorithm. Default is 1000.")
 
     parser.add_argument("--abs-path",
