@@ -59,6 +59,7 @@ def main():
                 trainer.path_score_my('test', test_k=0)
             else:
                 #GedGNN and Ours
+                test_k = args.postk
                 trainer.path_score_my('test',test_k=100)                
 
 
