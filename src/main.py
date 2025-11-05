@@ -60,7 +60,7 @@ def main():
             else:
                 #GedGNN and Ours
                 test_k = args.postk
-                trainer.path_score_my('test',test_k=100)                
+                trainer.path_score_my('test',test_k=test_k)                
 
 
 if __name__ == "__main__":
