@@ -301,7 +301,7 @@ class Trainer(object):
         if self.args.demo:
             train_num = 30
             val_num = 40
-            test_num = 50
+            test_num = 60
             self.args.epochs = 1
 
         assert self.args.graph_pair_mode == "combine"
