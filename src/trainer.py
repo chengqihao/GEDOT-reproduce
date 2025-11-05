@@ -1196,6 +1196,7 @@ class Trainer(object):
         return None, cost1, permute
 
     def test_matching(self, data, test_k,test_k_GW=100):
+        test_k_GW = test_k
         g1 = dgl.graph((data["edge_index_1"][0], data["edge_index_1"][1]), num_nodes=data["n1"])
         g2 = dgl.graph((data["edge_index_2"][0], data["edge_index_2"][1]), num_nodes=data["n2"])
         g1.ndata['f'] = data["features_1"]
